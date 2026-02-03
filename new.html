@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Pacifico&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // CHANGED: New Aesthetic Palette (Sage & Cream)
+                        pastelPink: '#e8f3e8',  // Soft Sage
+                        pastelCream: '#faf9f6', // Off-White
+                        softPurple: '#f4ece4',  // Warm Beige
+                        deepRose: '#5e6e5b',    // Muted Forest Green (Text)
+                        
+                        // Accent helper
+                        sageAccent: '#aebdca',
+                        warmGold: '#d4af37',
+                    },
+                    fontFamily: {
+                        header: ['Pacifico', 'cursive'],
+                        body: ['Nunito', 'sans-serif'],
+                        hand: ['Dancing Script', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- SOFT AESTHETIC THEME (Matcha & Vanilla) --- */
+        body {
+            /* CHANGED: Sage to Cream Gradient */
+            background: linear-gradient(135deg, #fdfbf7 0%, #e8f3e8 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            /* CHANGED: Cursor Emoji to Green Leaf/Sparkle */
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='48' viewport='0 0 100 100' style='fill:%235e6e5b;font-size:24px;'><text y='50%'>✨</text></svg>") 16 0, auto;
+        }
+
+        /* CINEMATIC BLUR BACKDROP */
+        #backdrop-blur {
+            position: fixed; inset: 0;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 40; opacity: 0; pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+        .focus-active {
+            opacity: 1 !important; pointer-events: all !important;
+        }
+
+        /* FAIRY DUST PARTICLES */
+        .particle {
+            position: fixed; border-radius: 50%;
+            background: rgba(212, 175, 55, 0.4); /* Gold tint */
+            pointer-events: none; z-index: 1;
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            20% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+
+        /* CLICK HEART EFFECT (Changed to Sage Green Heart) */
+        .click-heart {
+            position: absolute; width: 20px; height: 20px;
+            /* Changed fill color to soft sage */
+            background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238fbc8f'><path d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/></svg>") no-repeat center/contain;
+            pointer-events: none; z-index: 100;
+            animation: popUp 1s ease-out forwards;
+        }
+        @keyframes popUp {
+            0% { transform: scale(0) translateY(0); opacity: 1; }
+            100% { transform: scale(1.5) translateY(-50px); opacity: 0; }
+        }
+
+        /* GRAIN OVERLAY */
+        .grain-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 50;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+        }
+
+        /* GLASS CARD */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 8px 32px 0 rgba(94, 110, 91, 0.1); /* Subtle green shadow */
+        }
+
+        /* ENVELOPE STYLES */
+        .envelope-container {
+            transition: transform 0.3s ease; cursor: pointer;
+        }
+        .envelope-container:hover { transform: translateY(-10px); }
+
+        /* PARALLAX & ANIMATIONS */
+        .parallax-layer { transition: transform 0.2s ease-out; will-change: transform; }
+        .lamp-swing { transform-origin: top center; animation: swing 6s ease-in-out infinite; }
+        @keyframes swing { 0% { transform: rotate(2deg); } 50% { transform: rotate(-2deg); } 100% { transform: rotate(2deg); } }
+        .flower-float { animation: float 8s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+
+        /* TAPE */
+        .tape {
+            background-color: rgba(255, 255, 255, 0.5); backdrop-filter: blur(5px);
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+            width: 50px; height: 18px; z-index: 20; opacity: 0.8;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        /* 3D TILT EFFECT */
+        .polaroid-container { perspective: 1000px; }
+        .polaroid { transition: transform 0.1s ease-out, box-shadow 0.3s ease; transform-style: preserve-3d; }
+        
+        .hidden-section { display: none; opacity: 0; }
+        .cursor-blink {
+            display: inline-block; width: 2px; height: 1.2em; 
+            background-color: #5e6e5b; /* Green cursor */
+            animation: blink 0.7s infinite; vertical-align: middle;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        
+        /* Selection Color */
+        ::selection {
+            background: #dcead9; /* Soft Green selection */
+            color: #5e6e5b;
+        }
+
+        .leaf-petal {
+            position: fixed;
+            top: -10%;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0.7;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg) translateX(0);
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg) translateX(60px);
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-600 font-body flex flex-col items-center justify-center relative" onclick="createHeart(event)">
+
+    <audio id="bg-music" loop>
+        <source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Kevin_MacLeod/Classical_Sampler/Kevin_MacLeod_-_Gymnopedie_No_1.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="grain-overlay"></div>
+    <div id="particle-container"></div>
+    <div id="backdrop-blur"></div>
+
+    <div class="fixed top-0 left-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+        <div class="absolute -top-10 left-10 w-20 lamp-swing parallax-layer" data-speed="2"><svg viewBox="0 0 100 300" fill="none"><line x1="50" y1="0" x2="50" y2="100" stroke="#8f9c8c" stroke-width="2"/><circle cx="50" cy="140" r="40" fill="#fff9e6" fill-opacity="0.9" stroke="#e0d0a0"/><circle cx="50" cy="140" r="30" fill="#fff" fill-opacity="0.6"/></svg></div>
+        <div class="absolute -top-20 right-10 w-24 lamp-swing parallax-layer" data-speed="3" style="animation-delay: 1s;"><svg viewBox="0 0 100 300" fill="none"><line x1="50" y1="0" x2="50" y2="120" stroke="#8f9c8c" stroke-width="2"/><circle cx="50" cy="160" r="45" fill="#f4ece4" fill-opacity="0.8" stroke="#dcd0c0"/><circle cx="50" cy="160" r="35" fill="#fff" fill-opacity="0.5"/></svg></div>
+        <div class="absolute bottom-10 left-10 w-16 flower-float parallax-layer" data-speed="-2"><svg viewBox="0 0 100 100" fill="#c1d6c3"><path d="M50 0 C60 30 90 40 100 50 C90 60 60 70 50 100 C40 70 10 60 0 50 C10 40 40 30 50 0 Z"/><circle cx="50" cy="50" r="10" fill="#fff"/></svg></div>
+    </div>
+
+    <section id="section-landing" class="text-center z-10 w-full max-w-md px-4 mt-20">
+        <div class="glass-card p-10 rounded-full relative shadow-sm hover:shadow-xl transition-shadow duration-500">
+            <h1 class="font-header text-4xl text-deepRose mb-4 drop-shadow-sm tracking-wide">Hey my Rasmalaii😉...</h1>
+            <p id="random-love-note" class="text-gray-500 mb-8 font-hand text-2xl min-h-[32px]">I have a soft little surprise for you.</p>
+            
+            <div id="gift-box-container" class="cursor-pointer mx-auto w-48 h-48 relative transform transition-transform" onclick="openGift()">
+                <svg viewBox="0 0 200 200" class="w-full h-full filter drop-shadow-xl">
+                    <rect x="40" y="80" width="120" height="100" fill="#dcedc8" rx="5" /> <rect x="90" y="80" width="20" height="100" fill="#ffffff" /> <rect id="lid" x="30" y="60" width="140" height="30" fill="#c5e1a5" rx="5" /> <rect id="lid-ribbon" x="90" y="60" width="20" height="30" fill="#ffffff" /> <path id="bow" d="M100 60 C80 30 50 60 90 65 C50 65 30 30 95 60 C105 30 140 30 110 60 C150 50 160 30 100 60" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" /> </svg>
+                <p class="mt-6 text-xs text-gray-400 font-bold tracking-widest uppercase animate-pulse">Tap to open</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="section-celebration" class="hidden-section z-10 w-full max-w-3xl px-4 py-10 opacity-0 hidden">
+        <div class="text-center mb-10">
+            <h2 class="font-header text-5xl text-deepRose mb-4">Happy Birthday!</h2>
+            <p class="text-2xl text-gray-600 font-hand">You are turning <span id="age-span" class="text-[#7fa384] font-bold"></span> today! 🌸</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+            <div class="polaroid-container" onmousemove="tiltImage(event, this)" onmouseleave="resetTilt(this)">
+                <div class="polaroid bg-white p-4 shadow-lg rounded-sm rotate-[-2deg] relative">
+                    <div class="tape"></div>
+                    <img src="https://i.ibb.co/NXFXGZb/20251112-144454-1.jpg" class="w-full h-64 object-cover filter brightness-105 opacity-90">
+                    <p class="text-gray-500 mt-4 text-center font-hand text-2xl">Our first adventure</p>
+                </div>
+            </div>
+            <div class="polaroid-container mt-4 md:mt-12" onmousemove="tiltImage(event, this)" onmouseleave="resetTilt(this)">
+                <div class="polaroid bg-white p-4 shadow-lg rounded-sm rotate-[1deg] relative">
+                    <div class="tape" style="transform: translateX(-50%) rotate(3deg);"></div>
+                    <img src="https://i.ibb.co/yBhGt4hh/memory4.jpg" class="w-full h-64 object-cover filter contrast-[0.9]">
+                    <p class="text-gray-500 mt-4 text-center font-hand text-2xl">Moments that made me smile</p>
+                </div>
+            </div>
+            <div class="polaroid-container" onmousemove="tiltImage(event, this)" onmouseleave="resetTilt(this)">
+                <div class="polaroid bg-white p-4 shadow-lg rounded-sm rotate-[-1deg] relative">
+                    <div class="tape"></div>
+                    <img src="https://i.ibb.co/wZZjVtws/memorey-replace.jpg" class="w-full h-64 object-cover object-right filter sepia-[0.3]">
+                    <p class="text-gray-500 mt-4 text-center font-hand text-2xl">Your beautiful laugh</p>
+                </div>
+            </div>
+            <div class="polaroid-container mt-4 md:mt-12" onmousemove="tiltImage(event, this)" onmouseleave="resetTilt(this)">
+                <div class="polaroid bg-white p-4 shadow-lg rounded-sm rotate-[2deg] relative">
+                    <div class="tape" style="transform: translateX(-50%) rotate(-4deg);"></div>
+                    <img src="https://i.ibb.co/YFZsYfgz/memory1.jpg" class="w-full h-64 object-cover filter grayscale-[20%]">
+                    <p class="text-gray-500 mt-4 text-center font-hand text-2xl">Forever cherished</p>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <button onclick="scrollToCake()" class="glass-card px-8 py-3 rounded-full font-bold text-gray-600 hover:text-[#5e6e5b] transition-all shadow-md animate-pulse">
+                I baked a cake for you... ↓
+            </button>
+        </div>
+    </section>
+
+    <section id="section-cake" class="hidden-section z-10 w-full max-w-md px-4 py-20 text-center opacity-0 hidden">
+        <div class="glass-card p-10 rounded-3xl">
+            <h2 class="font-header text-3xl text-gray-700 mb-8">Make a wish...</h2>
+            <div class="relative w-64 h-80 mx-auto cursor-pointer group" onclick="blowCandle()">
+                <svg viewBox="0 0 200 250" class="w-full h-full">
+                    <ellipse cx="100" cy="230" rx="90" ry="15" fill="#f0f0f0" />
+                    <rect x="30" y="170" width="140" height="50" rx="3" fill="#fff3e0" /> <path d="M30 170 Q45 185 60 170 T90 170 T120 170 T150 170 T170 170" fill="none" stroke="#dcedc8" stroke-width="3" />
+                    <rect x="50" y="130" width="100" height="40" rx="3" fill="#e8f5e9" /> <path d="M50 130 Q65 145 80 130 T110 130 T140 130 T150 130" fill="none" stroke="#fff" stroke-width="3" />
+                    <rect x="70" y="95" width="60" height="35" rx="3" fill="#fff9c4" /> <rect x="97" y="65" width="6" height="30" fill="#cfd8dc" />
+                    <g id="flame-group" class="group-hover:scale-110 transition-transform origin-bottom">
+                        <path id="flame" d="M100 65 Q90 45 100 25 Q110 45 100 65" fill="#ffeb3b" />
+                        <circle cx="100" cy="60" r="4" fill="#ff9800" opacity="0.6" />
+                    </g>
+                    <g id="smoke-group" opacity="0">
+                        <path class="smoke" d="M100 65 Q90 45 95 25" stroke="#bdbdbd" stroke-width="2" fill="none" />
+                        <path class="smoke" d="M100 65 Q110 45 105 20" stroke="#bdbdbd" stroke-width="2" fill="none" />
+                    </g>
+                </svg>
+                <p class="mt-4 text-sm text-gray-400 italic font-body" id="wish-text">(Blow into your mic or tap flame) 🎤</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="section-treasure" class="hidden-section z-10 w-full max-w-2xl px-6 pb-20 pt-10 opacity-0 hidden">
+        <div class="text-center mb-8">
+            <h3 class="font-header text-4xl text-deepRose">I have 3 Hints for you...</h3>
+            <p class="text-gray-500 mt-2 font-hand text-xl">Tap an envelope to read the letter</p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 mb-10">
+            <div onclick="openLetter(1)" class="envelope-container bg-[#e8f5e9] p-4 rounded-lg shadow-md text-center">
+                <div class="text-3xl">💌</div>
+                <p class="font-header text-[#66bb6a] mt-2">Hint 1</p>
+            </div>
+            <div onclick="openLetter(2)" class="envelope-container bg-[#fff3e0] p-4 rounded-lg shadow-md text-center">
+                <div class="text-3xl">💌</div>
+                <p class="font-header text-[#ffb74d] mt-2">Hint 2</p>
+            </div>
+            <div onclick="openLetter(3)" class="envelope-container bg-[#e3f2fd] p-4 rounded-lg shadow-md text-center">
+                <div class="text-3xl">💌</div>
+                <p class="font-header text-[#64b5f6] mt-2">Hint 3</p>
+            </div>
+        </div>
+    </section>
+
+    <div id="letter-overlay" class="fixed inset-0 z-[60] hidden flex items-center justify-center pointer-events-none">
+        
+        <div id="letter-box" class="bg-[#fdfdf9] w-11/12 max-w-md p-8 rounded-sm shadow-2xl relative pointer-events-auto transform scale-95 opacity-0 transition-all duration-500" style="background-image: url('data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%235e6e5b\' fill-opacity=\'0.05\' fill-rule=\'evenodd\'%3E%3Ccircle cx=\'3\' cy=\'3\' r=\'3\'/%3E%3C/g%3E%3C/svg%3E');">
+            
+            <button onclick="closeLetter()" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 text-2xl font-bold">&times;</button>
+            
+            <div class="border-2 border-[#dcedc8] p-6 h-full relative dashed-border">
+                <h3 class="font-hand text-3xl text-deepRose mb-6">pyari bacchi,</h3>
+                
+                <div class="font-hand text-2xl text-gray-600 leading-loose min-h-[120px]">
+                    <span id="typewriter-text"></span>
+                    <span class="cursor-blink"></span>
+                </div>
+
+                <div id="final-button-container" class="hidden mt-8 text-center pt-4 border-t border-[#dcedc8]">
+                    <button onclick="triggerFinalSurprise()" class="bg-gradient-to-r from-[#a5d6a7] to-[#80cbc4] text-white font-bold py-2 px-6 rounded-full shadow-lg transform transition hover:scale-105">
+                        ✨ Open Surprise
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        // --- DATA & CONFIG ---
+        const hint1 = "The first surprise is hidden behind a door. you think they are annoying . little ones to you leave there  (Hint: Room No...). it comes adter the place you leave  P.S. Fix your hair, something special awaits you there! 🎁";
+        const hint2 = "You found the cake, lekin dusra surprise waha pe hai jaha bachua ho sakta hai .the place when some people tried to prank you but you were too brave and smart . Go there and look around carefully... 🎈";
+        const hint3 = "The final surprise isn't in this room. It's a digital memory I built just for you. Click the button below to travel there wait for 5 seconds it feels its end but its just the begining and when the actuall black thing opens click somwhere on the screen to see something last... ❤️";
+        
+        const loveNotes = [
+            "I have a soft little surprise for you...",
+            "The world is better because you're in it.",
+            "Today is all about my favorite person.",
+            "You make my heart smile every day.",
+            "Ready for a little magic?"
+        ];
+        document.getElementById('random-love-note').innerText = loveNotes[Math.floor(Math.random() * loveNotes.length)];
+
+        // Age Calc
+        const birthDate = new Date("2006-02-08");
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        if (today.getMonth() < birthDate.getMonth() || (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) { age--; }
+        document.getElementById('age-span').innerText = age + "th";
+
+        gsap.to("#gift-box-container", { y: -10, duration: 1.5, repeat: -1, yoyo: true, ease: "sine.inOut" });
+
+        // --- INTERACTIVE FEATURES ---
+        
+        // 1. Parallax Mouse Movement
+        document.addEventListener("mousemove", (e) => {
+            const layers = document.querySelectorAll(".parallax-layer");
+            layers.forEach((layer) => {
+                const speed = layer.getAttribute("data-speed") || 2;
+                const x = (window.innerWidth - e.clientX * speed) / 100;
+                const y = (window.innerHeight - e.clientY * speed) / 100;
+                gsap.to(layer, { x: x, y: y, duration: 1, ease: "power2.out" });
+            });
+        });
+
+        // 2. Soft UI Click Sounds
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSoftClick() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.1);
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.1);
+        }
+        document.querySelectorAll('button, .envelope-container, .polaroid-container, #gift-box-container').forEach(el => {
+            el.addEventListener('mousedown', playSoftClick);
+        });
+
+        // 3. Microphone Blow Detection
+        let microphone, analyser;
+        async function initMicrophone() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const micCtx = new (window.AudioContext || window.webkitAudioContext)();
+                microphone = micCtx.createMediaStreamSource(stream);
+                analyser = micCtx.createAnalyser();
+                analyser.fftSize = 256;
+                microphone.connect(analyser);
+                detectBlow();
+            } catch (err) { console.log("Mic denied"); }
+        }
+        function detectBlow() {
+            const dataArray = new Uint8Array(analyser.frequencyBinCount);
+            function check() {
+                analyser.getByteFrequencyData(dataArray);
+                let sum = 0;
+                for(let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+                if (sum / dataArray.length > 50 && !candleBlown) blowCandle();
+                if (!candleBlown) requestAnimationFrame(check);
+            }
+            check();
+        }
+
+        // 4. Fairy Dust
+        function createParticles() {
+            const container = document.getElementById('particle-container');
+            for(let i=0; i<20; i++) {
+                let p = document.createElement('div');
+                p.classList.add('particle');
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.width = Math.random() * 6 + 2 + 'px';
+                p.style.height = p.style.width;
+                p.style.animationDuration = Math.random() * 10 + 10 + 's';
+                p.style.animationDelay = Math.random() * 10 + 's';
+                container.appendChild(p);
+            }
+        }
+        createParticles();
+
+        function createHeart(e) {
+            const heart = document.createElement('div');
+            heart.classList.add('click-heart');
+            heart.style.left = (e.clientX - 10) + 'px';
+            heart.style.top = (e.clientY - 10) + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 1000);
+        }
+
+        function tiltImage(event, card) {
+            const rect = card.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const rotateX = ((y - rect.height/2) / rect.height/2) * -10;
+            const rotateY = ((x - rect.width/2) / rect.width/2) * 10;
+            const image = card.querySelector('.polaroid');
+            image.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+            image.style.zIndex = 50;
+        }
+
+        function resetTilt(card) {
+            const image = card.querySelector('.polaroid');
+            let originalRot = "";
+            if(image.classList.contains('rotate-[-2deg]')) originalRot = "rotate(-2deg)";
+            if(image.classList.contains('rotate-[1deg]')) originalRot = "rotate(1deg)";
+            if(image.classList.contains('rotate-[-1deg]')) originalRot = "rotate(-1deg)";
+            if(image.classList.contains('rotate-[2deg]')) originalRot = "rotate(2deg)";
+            image.style.transform = `${originalRot} scale(1)`;
+            image.style.zIndex = 1;
+        }
+
+        // --- CORE FUNCTIONS ---
+
+        function openGift() {
+            const audio = document.getElementById('bg-music');
+            audio.volume = 0.3; 
+            audio.play().catch(e => console.log("Audio interaction needed"));
+            
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    document.getElementById('section-landing').style.display = 'none';
+                    initCelebration();
+                }
+            });
+            tl.to("#lid", { y: -50, rotation: -10, duration: 0.5 })
+              .to("#gift-box-container", { scale: 3, opacity: 0, duration: 0.8 }, "<")
+              .to("#section-landing", { opacity: 0, duration: 0.5 }, "<");
+        }
+
+        function initCelebration() {
+            const s = document.getElementById('section-celebration');
+            s.style.display = 'block';
+            window.scrollTo(0, 0); 
+            gsap.to(s, { opacity: 1, duration: 1 });
+            // CHANGED: Confetti Colors (Green, Cream, White)
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#a5d6a7', '#fff9c4', '#ffffff'] });
+        }
+
+        function scrollToCake() {
+            const c = document.getElementById('section-cake');
+            c.style.display = 'block';
+            gsap.to(c, { opacity: 1, duration: 1, delay: 0.2 });
+            c.scrollIntoView({ behavior: 'smooth' });
+            gsap.to("#flame", { scale: 1.1, transformOrigin: "center bottom", duration: 0.2, repeat: -1, yoyo: true });
+            
+            // Activate Mic on scroll to cake
+            initMicrophone();
+        }
+
+        let candleBlown = false;
+        function blowCandle() {
+            if (candleBlown) return;
+            candleBlown = true;
+            gsap.killTweensOf("#flame");
+
+            const tl = gsap.timeline();
+            tl.to("#flame-group", { scale: 0, opacity: 0, duration: 0.5 })
+              .to("#smoke-group", { opacity: 1, duration: 0.2 })
+              .to(".smoke", { y: -30, opacity: 0, duration: 2, stagger: 0.2 })
+              .to("#wish-text", { text: "Wish granted! ✨", duration: 0.5 }, "<");
+            
+            setTimeout(() => {
+                 // CHANGED: Confetti Colors
+                 confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#c5e1a5', '#ffe082', '#ffffff'] });
+            }, 500);
+
+            tl.add(() => { showTreasureHunt(); }, "+=1.5");
+        }
+
+        function showTreasureHunt() {
+            const t = document.getElementById('section-treasure');
+            t.style.display = 'block';
+            t.scrollIntoView({ behavior: 'smooth' });
+            gsap.to(t, { opacity: 1, duration: 1 });
+        }
+
+        // --- LETTER LOGIC (FIXED) ---
+        let currentTimeout;
+        
+        function openLetter(id) {
+            const overlay = document.getElementById('letter-overlay');
+            const letterBox = document.getElementById('letter-box');
+            const backdrop = document.getElementById('backdrop-blur');
+            const btn = document.getElementById('final-button-container');
+            
+            // 1. Show Overlay
+            overlay.classList.remove('hidden');
+            backdrop.classList.add('focus-active');
+            
+            // 2. Animate Box In
+            setTimeout(() => {
+                letterBox.classList.remove('scale-95', 'opacity-0');
+                letterBox.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            
+            let textToType = "";
+            if(id === 1) textToType = hint1;
+            if(id === 2) textToType = hint2;
+            if(id === 3) textToType = hint3;
+
+            btn.classList.add('hidden');
+            clearTimeout(currentTimeout); 
+            
+            typeWriter("typewriter-text", textToType, 40, () => {
+                if(id === 3) {
+                    btn.classList.remove('hidden');
+                    // Add simple fade in for button
+                    btn.style.opacity = 0;
+                    setTimeout(() => {
+                         btn.style.transition = "opacity 1s";
+                         btn.style.opacity = 1;
+                    }, 100);
+                }
+            });
+        }
+
+        function closeLetter() {
+            const overlay = document.getElementById('letter-overlay');
+            const letterBox = document.getElementById('letter-box');
+            const backdrop = document.getElementById('backdrop-blur');
+            
+            letterBox.classList.remove('scale-100', 'opacity-100');
+            letterBox.classList.add('scale-95', 'opacity-0');
+            backdrop.classList.remove('focus-active');
+            
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 500);
+        }
+
+        function typeWriter(elementId, text, speed, callback) {
+            let i = 0;
+            let element = document.getElementById(elementId);
+            element.innerHTML = "";
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    currentTimeout = setTimeout(type, speed);
+                } else if (callback) { callback(); }
+            }
+            type();
+        }
+
+        function triggerFinalSurprise() {
+            confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 } });
+            
+            // FADE TO WHITE ENDING
+            const overlay = document.createElement('div');
+            // Ensure properties are applied correctly
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'white';
+            overlay.style.zIndex = '9999';
+            overlay.style.opacity = '0';
+            overlay.style.transition = 'opacity 2s ease-in-out';
+            overlay.style.display = 'flex';
+            overlay.style.alignItems = 'center';
+            overlay.style.justifyContent = 'center';
+            
+            overlay.innerHTML = '<h1 style="font-family: \'Pacifico\', cursive; font-size: 3rem; color: #5e6e5b; text-align: center;">bohot sara pyaaaar for my bhonduu🫂...</h1>';
+            document.body.appendChild(overlay);
+
+            setTimeout(() => { overlay.style.opacity = '1'; }, 100);
+            
+            // Wait 5 seconds so she can read the text before moving to the final page
+            setTimeout(() => {
+                window.location.href = "https://bot69388-lab.github.io/bday-shreya-last-part-/"; 
+            }, 5000);
+        }
+
+        const natureItems = ["🌿", "🍃", "🌸", "🌼", "💮"];
+
+        function spawnNature() {
+            const item = document.createElement("div");
+            item.className = "leaf-petal";
+
+            // Pick random leaf or flower
+            item.innerHTML = natureItems[Math.floor(Math.random() * natureItems.length)];
+
+            // Random position
+            item.style.left = Math.random() * 100 + "vw";
+
+            // Random size
+            item.style.fontSize = (Math.random() * 18 + 14) + "px";
+
+            // Random fall speed
+            item.style.animationDuration = (Math.random() * 6 + 6) + "s";
+
+            // Slight horizontal variation
+            item.style.transform = `translateX(${Math.random() * 40 - 20}px)`;
+
+            document.body.appendChild(item);
+
+            // Remove after animation ends
+            setTimeout(() => item.remove(), 12000);
+        }
+
+        // Spawn every 1.5 seconds
+        setInterval(spawnNature, 1500);
+    </script>
+</body>
+</html>
